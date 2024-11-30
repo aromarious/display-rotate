@@ -1,0 +1,15 @@
+# EditorConfigはファイル形式を指定します
+root = true
+
+# 全般設定
+[*]
+charset = utf-8          # ファイルの文字コード
+end_of_line = lf         # 改行コード（lf, crlf, crから選択）
+indent_style = space     # インデントのスタイル（space または tab）
+indent_size = 2          # スペースの場合のインデント幅
+trim_trailing_whitespace = true # 行末の空白を削除
+
+# 特定のファイル形式の設定
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 4
