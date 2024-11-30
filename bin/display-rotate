@@ -1,5 +1,5 @@
 #!/bin/sh
-script_dir=$(dirname $0)
+script_dir=$(dirname "$(realpath "$0")")
 export DISPLAY_ROTATE_ID=$(cat ~/.display-rotate 2>/dev/null)
-result=$(displayplacer list | tail -1 | node ${script_dir}/display-rotate.js "$@")
+result=$(displayplacer list | tail -1 | node "${script_dir}"/display-rotate.js "$@")
 eval $result
