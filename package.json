@@ -1,13 +1,13 @@
 {
   "name": "display-rotate",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "bin": {
     "display-rotate": "./bin/display-rotate"
   },
+  "files": [
+    "bin/display-rotate",
+    "bin/display-rotate.js"
+  ],
   "keywords": [],
   "author": "aromarious(aro)",
   "license": "ISC",
