@@ -1,10 +1,17 @@
 # `display-rotate`
 
-個人的なディスプレイ設定のコマンド。ディスプレイを時計回りに 90 度回転する。
+[🇯🇵 日本語README](readme.ja.md)
 
-[`displayplacer`](https://github.com/jakehilborn/displayplacer)コマンドを使っている。
+A personal command for display settings. Rotates the display 90 degrees clockwise.
 
-## 設定ファイル
+This command uses the [`displayplacer`](https://github.com/jakehilborn/displayplacer) command.
 
-`~/.display-rotate` 回転対象のディスプレイ ID を書いておく。
-`displayplacer list`コマンドの出力を見て、回転したいディスプレイの ID をコピペしてくる。
+## Installation
+```sh
+npm install -g https://github.com/aromarious/display-rotate
+```
+
+## Configuration File
+
+Write the target display ID in `~/.display-rotate`.
+Check the output of the `displayplacer list` command and copy the ID of the display you want to rotate.
