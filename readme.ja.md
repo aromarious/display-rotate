@@ -15,7 +15,7 @@ npm install -g https://github.com/aromarious/display-rotate
 % display-rotate [<display-id>]
 ```
 
-`<display-id>`は`displayplacer list`コマンドの出力を見て、回転したいディスプレイの ID をコピペしてくる。
+`<display-id>`は`displayplacer list`コマンドの出力を見て、回転したいディスプレイの ID をコピペしてくること。
 
 設定ファイル `~/.display-rotate` に回転対象のディスプレイ ID を書いておくと、そこからディスプレイIDを取得する。両方指定した場合、引数指定が優先される。
 
