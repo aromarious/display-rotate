@@ -2,8 +2,22 @@
 usage_message="Usage: display-rotate <display-id>
   or place ~/.display-rotate with the display id that you want to rotate.
   Execute \"displayplacer list\" command to pick up display id"
+displayplacer_checkfilename='.displayplacer_installed'
 script_dir=$(dirname "$(realpath "$0")")
 export DISPLAY_ROTATE_ID=$(cat ~/.display-rotate 2>/dev/null)
+
+displayplacer_checkfile_path="${script_dir}/${displayplacer_checkfilename}"
+if [ ! -f "$displayplacer_checkfile_path" ]; then
+  read -p "displayplacer is not installed. Do you want to install it now? (y/n) " answer
+  case $answer in
+  [Yy]*) brew install displayplacer && touch "$displayplacer_checkfile_path" ;;
+  *)
+    echo "displayplacer is required to run this script." >&2
+    exit 1
+    ;;
+  esac
+fi
+
 result=$(displayplacer list | tail -1 | node "${script_dir}/../dist/display-rotate.js" "$@") ||
   {
     echo "$usage_message" >&2

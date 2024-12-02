@@ -14,19 +14,78 @@
  */
 
 import { readFileSync } from "fs"
-
-const args: string[] = process.argv.slice(2) // Remove node and script path
-const id: string =
-  args.length > 0 ? args[0] : process.env.DISPLAY_ROTATE_ID || ""
-if (!id) {
-  process.exit(1)
+const errors = {
+  default: {
+    exitCode: 1,
+    message: "",
+  },
+  incorrectDisplayId: {
+    exitCode: 2,
+    message: 'Incorrect display ID "${id}".',
+  },
 }
-const input: string = readFileSync("/dev/stdin", "utf8").trim()
-const output: string = input
-  .replace(
-    new RegExp(`(id:${id}.*?degree:)(\\d+)`),
-    (_, prefix, degree) => `${prefix}${(parseInt(degree, 10) + 90) % 360}`
-  )
-  .replace(/res:(\d+)x(\d+)/, (_, width, height) => `res:${height}x${width}`)
-console.log(output)
-process.exit(0)
+
+const errorExit = ({
+  exitCode,
+  message,
+}: {
+  exitCode: number
+  message: string | { template: string; variables: { [key: string]: string } }
+}): void => {
+  if (message) {
+    if (typeof message === "string") {
+      console.error(message)
+    } else {
+      console.error(interpolate(message))
+    }
+  } // message がなかったらメッセージ出力はしない
+  process.exit(exitCode)
+}
+
+const interpolate = ({
+  template,
+  variables,
+}: {
+  template: string
+  variables: { [key: string]: string }
+}): string => {
+  return template.replace(/\${(.*?)}/g, (_, key) => variables[key] || "")
+}
+
+const main = (): void => {
+  try {
+    const args: string[] = process.argv.slice(2) // Remove node and script path
+    const id: string =
+      args.length > 0 ? args[0] : process.env.DISPLAY_ROTATE_ID || ""
+    if (!id) {
+      errorExit(errors.default)
+    }
+    const input: string = readFileSync("/dev/stdin", "utf8").trim()
+    const idRegex: RegExp = new RegExp(`(id:${id}.*?degree:)(\\d+)`)
+    const checkId: boolean = idRegex.test(input)
+    if (!checkId) {
+      errorExit({
+        exitCode: errors.incorrectDisplayId.exitCode,
+        message: {
+          template: errors.incorrectDisplayId.message,
+          variables: { id },
+        },
+      })
+    }
+    const output: string = input
+      .replace(
+        new RegExp(`(id:${id}.*?degree:)(\\d+)`),
+        (_, prefix, degree) => `${prefix}${(parseInt(degree, 10) + 90) % 360}`
+      )
+      .replace(
+        /res:(\d+)x(\d+)/,
+        (_, width, height) => `res:${height}x${width}`
+      )
+    console.log(output)
+    process.exit(0)
+  } catch (error) {
+    errorExit(errors.default)
+  }
+}
+
+main()
