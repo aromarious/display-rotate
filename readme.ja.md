@@ -1,8 +1,8 @@
 # `display-rotate`
 
-個人的なディスプレイ設定のコマンド。ディスプレイを時計回りに 90 度回転する。
+ディスプレイを回転させるコマンド。指定したディスプレイを時計回りに 90 度回転させる。
 
-[`displayplacer`](https://github.com/jakehilborn/displayplacer)コマンドを使っている。
+[`displayplacer`](https://github.com/jakehilborn/displayplacer)コマンドを使っている。初回起動の際にインストールするかどうか聞かれるので`y`と答えてインストールすること。（`brew insatll displayplacer`が実行される）
 
 ## インストール
 ```sh
