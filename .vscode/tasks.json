@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start:watch",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "npm: start:watch",
+      "detail": "tsc -w",
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}
