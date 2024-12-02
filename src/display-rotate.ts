@@ -11,6 +11,7 @@
  *
  * @error If the display ID is not provided either as a command line argument or as an environment variable,
  *        a usage message will be output to standard error and the process will exit with code 1.
+ *        If the display ID is incorrect, a message will be output to standard error and the process will exit with code 2.
  */
 
 import { readFileSync } from "fs"
