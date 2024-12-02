@@ -2,14 +2,22 @@
   "name": "display-rotate",
   "version": "1.0.0",
   "bin": {
-    "display-rotate": "./bin/display-rotate"
+    "display-rotate": "bin/display-rotate"
   },
   "files": [
     "bin/display-rotate",
-    "bin/display-rotate.js"
+    "dist"
   ],
   "keywords": [],
   "author": "aromarious(aro)",
   "license": "ISC",
-  "description": ""
+  "description": "rotate display command on MacOS using displayplacer",
+  "scripts": {
+    "build": "tsc"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^4.0.0"
+  }
 }
