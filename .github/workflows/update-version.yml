@@ -1,37 +1,43 @@
-name: Update version and create release
+name: Package and update Formula
 
 on:
   push:
     tags:
-      - 'v*' # vで始まるタグが作成されたときに実行
+      - "v*" # vで始まるタグが作成されたときに実行
 
 jobs:
-  build-and-release:
+  build-and-update:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "18"
 
       - name: Install dependencies and build
         run: |
           npm ci
           npm run build
 
-      - name: Create release archive
+      - name: Package files into tar.gz
         run: |
           mkdir release
           cp -r dist bin package.json release/
           cd release
           tar czf ../display-rotate.tar.gz .
+          cd ..
 
-      - name: Generate SHA256
+      - name: Calculate SHA256
+        id: calculate_sha256
+        run: echo "sha256=$(shasum -a 256 display-rotate.tar.gz | awk '{print $1}')" >> $GITHUB_ENV
+
+      - name: Update Formula
         run: |
           echo "SHA256=$(shasum -a 256 display-rotate.tar.gz | awk '{print $1}')" >> $GITHUB_ENV
 
@@ -45,8 +51,18 @@ jobs:
             This release contains pre-built files for Homebrew installation.
 
       - name: Commit version update
+        env:
+          # SHA256 値を取得
+          SHA256: ${{ env.SHA256 }}
+        run: |
+          echo "Updating Formula with SHA256: $SHA256"
+          sed -i "s/sha256 \".*\"/sha256 \"$SHA256\"/" Formula/display-rotate.rb
+          cat Formula/display-rotate.rb
+
+      - name: Commit and push Formula update
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -am "chore: update version to ${{ github.ref_name }}"
-          git push
+          git add Formula/display-rotate.rb
+          git commit -m "chore: update Formula with SHA256 for ${{ github.ref_name }}"
+          git push origin main
