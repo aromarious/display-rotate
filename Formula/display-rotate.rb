@@ -1,19 +1,19 @@
 class DisplayRotate < Formula
-  desc "A command-line tool to Rotate your display on macOS using displayplacer"
+  desc "Rotate your display easily via command-line on macOS using displayplacer."
   homepage "https://github.com/aromarious/display-rotate"
-  url "https://github.com/aromarious/display-rotate/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "81108d0cc50886b5bf121697cd49fed4c727c1f98adb5eaab777828560db8ea8"
+  url "https://github.com/aromarious/display-rotate/archive/refs/tags/v1.0.1.tar.gz"
+  sha256 "f50b7d4262cb99c9548034abd9ae521869ed805501edc8b2f7e0afc798f025d7"
   license "ISC"
 
   depends_on "node"
   depends_on "displayplacer"
+  depends_on "jq"
 
   def install
-    # Install only necessary files to libexec
-    libexec.install Dir["dist", "bin", "package.json"]
-
-    # Create the binary link
-    (bin/"display-rotate").write_env_script libexec/"bin/display-rotate", PATH: "#{Formula["node"].opt_bin}:$PATH"
+    system "npm", "install"
+    system "npm", "run", "build"
+    libexec.install "package.json", "package-lock.json", "bin", "dist"
+    bin.install_symlink libexec/"bin/display-rotate"
   end
 
   test do

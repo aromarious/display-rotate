@@ -10,6 +10,13 @@ usage_message="Usage: display-rotate <display-id>
 script_dir=$(dirname "$(realpath "$0")")
 export DISPLAY_ROTATE_ID=$(cat ~/.display-rotate 2>/dev/null)
 
+# Check for version flag
+if [ "$1" = "--version" ] || [ "$1" = "-v" ]; then
+  version=$(jq -r '.version' "$script_dir/../package.json")
+  echo "v$version"
+  exit 0
+fi
+
 if ! displayplacer --version >/dev/null 2>&1; then
   if ! brew --version >/dev/null 2>&1; then
     brew install displayplacer

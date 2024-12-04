@@ -12,19 +12,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
-          
-      - name: Update package version
-        run: |
-          # タグからバージョン番号を取得（vを除去）
-          VERSION=$(echo ${{ github.ref_name }} | sed 's/^v//')
-          # package.jsonのバージョンを更新
-          npm version $VERSION --no-git-tag-version
 
       - name: Install dependencies and build
         run: |
@@ -48,9 +41,9 @@ jobs:
           files: display-rotate.tar.gz
           body: |
             SHA256: ${{ env.SHA256 }}
-            
+
             This release contains pre-built files for Homebrew installation.
-          
+
       - name: Commit version update
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
