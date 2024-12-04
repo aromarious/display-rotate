@@ -1,4 +1,4 @@
-name: Update npm version
+name: Update version and create release
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - 'v*' # vで始まるタグが作成されたときに実行
 
 jobs:
-  update-version:
+  build-and-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,8 +25,33 @@ jobs:
           VERSION=$(echo ${{ github.ref_name }} | sed 's/^v//')
           # package.jsonのバージョンを更新
           npm version $VERSION --no-git-tag-version
+
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Create release archive
+        run: |
+          mkdir release
+          cp -r dist bin package.json release/
+          cd release
+          tar czf ../display-rotate.tar.gz .
+
+      - name: Generate SHA256
+        run: |
+          echo "SHA256=$(shasum -a 256 display-rotate.tar.gz | awk '{print $1}')" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: display-rotate.tar.gz
+          body: |
+            SHA256: ${{ env.SHA256 }}
+            
+            This release contains pre-built files for Homebrew installation.
           
-      - name: Commit changes
+      - name: Commit version update
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
