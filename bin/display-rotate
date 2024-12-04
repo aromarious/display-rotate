@@ -1,6 +1,11 @@
 #!/bin/sh
 usage_message="Usage: display-rotate <display-id>
-  or place ~/.display-rotate with the display id that you want to rotate.
+       display-rotate --version|-v
+
+  <display-id>: ID of the display to rotate
+  --version|-v: Show version information
+
+  You can also place ~/.display-rotate with the display id that you want to rotate.
   Execute \"displayplacer list\" command to pick up display id"
 displayplacer_checkfilename='.displayplacer_installed'
 script_dir=$(dirname "$(realpath "$0")")

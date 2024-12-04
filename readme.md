@@ -15,9 +15,9 @@ npm install -g https://github.com/aromarious/display-rotate
 
 ```sh
 % display-rotate [<display-id>]
+% display-rotate --version  # or -v to show version
 ```
 
 You can find the `<display-id>` by running the `displayplacer list` command and copying the ID of the display you want to rotate.
 
 If you write the display ID to be rotated in the configuration file `~/.display-rotate`, it will be obtained from there. If both are specified, the argument specification takes precedence.
-

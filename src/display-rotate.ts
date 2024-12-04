@@ -6,6 +6,9 @@
  *
  * @param id The display ID. If not provided as a command line argument, it will be read from the environment variable `DISPLAY_ROTATE_ID`.
  *
+ * @options
+ * --version, -v  Display the current version of display-rotate
+ *
  * @environment
  * - `DISPLAY_ROTATE_ID`: The display ID to be used if not provided as a command line argument.
  *
@@ -15,6 +18,12 @@
  */
 
 import { readFileSync } from "fs"
+import { fileURLToPath } from "url"
+import { dirname, join } from "path"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
 const errors = {
   default: {
     exitCode: 1,
@@ -56,6 +65,15 @@ const interpolate = ({
 const main = (): void => {
   try {
     const args: string[] = process.argv.slice(2) // Remove node and script path
+
+    // Handle --version flag
+    if (args.includes("--version") || args.includes("-v")) {
+      const packageJsonPath = join(__dirname, "..", "package.json")
+      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"))
+      console.log(`v${packageJson.version}`)
+      process.exit(0)
+    }
+
     const id: string =
       args.length > 0 ? args[0] : process.env.DISPLAY_ROTATE_ID || ""
     if (!id) {

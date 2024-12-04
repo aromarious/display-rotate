@@ -1,0 +1,34 @@
+name: Update npm version
+
+on:
+  push:
+    tags:
+      - 'v*' # vで始まるタグが作成されたときに実行
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+          
+      - name: Update package version
+        run: |
+          # タグからバージョン番号を取得（vを除去）
+          VERSION=$(echo ${{ github.ref_name }} | sed 's/^v//')
+          # package.jsonのバージョンを更新
+          npm version $VERSION --no-git-tag-version
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -am "chore: update version to ${{ github.ref_name }}"
+          git push
