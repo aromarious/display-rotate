@@ -49,6 +49,8 @@ jobs:
             SHA256: ${{ env.SHA256 }}
 
             This release contains pre-built files for Homebrew installation.
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Commit version update
         env:
