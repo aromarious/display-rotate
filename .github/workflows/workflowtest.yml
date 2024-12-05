@@ -1,6 +1,9 @@
 name: WorkflowTest
 
 on:
+  push:
+    tags:
+      - 'v*'
   release:
   workflow_dispatch:  # 手動実行を有効化する設定
 
@@ -15,4 +18,7 @@ jobs:
     - name: Display GitHub context variables
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
+        SECRETS_CONTEXT: ${{ toJson(secrets) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
+        echo "$SECRETS_CONTEXT"
