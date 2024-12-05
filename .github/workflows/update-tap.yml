@@ -3,6 +3,8 @@ name: Update Tap Repository
 on:
   release:
     types: [published]
+  workflow_dispatch:  # 手動実行を有効化する設定
+
 
 jobs:
   update-tap:
