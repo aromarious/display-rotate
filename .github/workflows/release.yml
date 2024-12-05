@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
 
       - name: Install git-cliff
         run: npm install -g git-cliff
@@ -18,10 +22,12 @@ jobs:
       - name: Create CHANGELOG for release
         run: git-cliff --latest --output latest-release.md
 
-      - id: create-release
+      - name: Create Release
+        id: create-release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          token: ${{ secrets.TOKEN }}
           body_path: ./latest-release.md
           draft: false
           prerelease: false
