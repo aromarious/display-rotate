@@ -1,0 +1,36 @@
+name: Update Tap Repository
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-tap:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Download release asset
+      run: |
+        curl -L ${{ github.event.release.assets[0].browser_download_url }} -o release.tar.gz
+
+    - name: Calculate SHA256
+      id: sha256
+      run: echo "::set-output name=sha256::$(sha256sum release.tar.gz | awk '{ print $1 }')"
+
+    - name: Clone tap repository
+      run: git clone https://github.com/aromarious/homebrew-private.git
+
+    - name: Update formula
+      run: |
+        cd homebrew-private
+        sed -i '' 's/sha256 "[a-f0-9]\{64\}"/sha256 "${{ steps.sha256.outputs.sha256 }}"/' Formula/your_formula.rb
+
+    - name: Commit and push changes
+      run: |
+        cd homebrew-private
+        git add .
+        git commit -m "Update formula for new release ${{ github.event.release.tag_name }}"
+        git push origin main
