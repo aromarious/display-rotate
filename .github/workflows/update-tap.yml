@@ -24,7 +24,10 @@ jobs:
       run: echo "sha256=$(sha256sum release.tar.gz | awk '{ print $1 }')" >> $GITHUB_OUTPUT
 
     - name: Clone tap repository
-      run: git clone https://github.com/aromarious/homebrew-private.git
+      uses: actions/checkout@v2
+      with:
+        repository: aromarious/homebrew-private
+        path: homebrew-private
 
     - name: Set formula name
       id: formula
@@ -36,12 +39,11 @@ jobs:
         sed -i.bak 's/sha256 "[a-f0-9]\{64\}"/sha256 "${{ steps.sha256.outputs.sha256 }}"/' "Formula/${{ steps.formula.outputs.formula }}.rb"
 
     - name: Commit and push changes
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        cd homebrew-private
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add Formula/${{ steps.formula.outputs.formula }}.rb
-        git commit -m "Update formula for new release on ${{ github.repository }} - ${{ github.event.release.tag_name }}"
-        git push origin main
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Update formula for new release on ${{ github.repository }} - ${{ github.event.release.tag_name }}"
+        repository: homebrew-private
+        file_pattern: Formula/${{ steps.formula.outputs.formula }}.rb
+        branch: main
+        commit_user_name: github-actions[bot]
+        commit_user_email: github-actions[bot]@users.noreply.github.com
