@@ -14,7 +14,7 @@ jobs:
 
     - name: Download release asset
       run: |
-        curl -L ${{ github.event.release.assets[0].browser_download_url }} -o release.tar.gz
+        curl -L ${{ github.event.release.assets.browser_download_url }} -o release.tar.gz
 
     - name: Calculate SHA256
       id: sha256
@@ -23,10 +23,15 @@ jobs:
     - name: Clone tap repository
       run: git clone https://github.com/aromarious/homebrew-private.git
 
+    - name: Set formula name
+      id: formula
+      run: echo "::set-output name=formula::$(echo ${{ github.repository }} | cut -d / -f 2)"
+
     - name: Update formula
       run: |
+        FORMULA_FILE="Formula/${{ steps.formula.outputs.formula }}.rb"
         cd homebrew-private
-        sed -i '' 's/sha256 "[a-f0-9]\{64\}"/sha256 "${{ steps.sha256.outputs.sha256 }}"/' Formula/your_formula.rb
+        sed -i.bak 's/sha256 "[a-f0-9]\{64\}"/sha256 "${{ steps.sha256.outputs.sha256 }}"/' $FORMULA_FILE
 
     - name: Commit and push changes
       run: |
