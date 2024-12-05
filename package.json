@@ -19,7 +19,7 @@
   "author": "aromarious(aro)",
   "scripts": {
     "build": "npx tsc",
-    "start:watch": "tsc -w"
+    "start:watch": "npx tsc -w"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",
