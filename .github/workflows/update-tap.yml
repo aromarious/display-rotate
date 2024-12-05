@@ -1,6 +1,8 @@
 name: Update Tap Repository
 
 on:
+  push:
+    tags: ['*']
   release:
   workflow_dispatch:  # 手動実行を有効化する設定
 
