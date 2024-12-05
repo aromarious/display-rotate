@@ -17,7 +17,7 @@ jobs:
 
     - name: Download release asset
       run: |
-        curl -L ${{ github.event.release.assets.browser_download_url }} -o release.tar.gz
+        curl -L "${{ github.event.head_commit.url }}/archive/${{ github.ref }}.tar.gz" -o release.tar.gz
 
     - name: Calculate SHA256
       id: sha256
