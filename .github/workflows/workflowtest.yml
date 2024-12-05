@@ -19,5 +19,7 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
         SECRETS_CONTEXT: ${{ toJson(secrets) }}
       run: |
+        echo "-------- GITHUB_CONTEXT: --------"
         echo "$GITHUB_CONTEXT"
+        echo "-------- SECRETS_CONTEXT: --------"
         echo "$SECRETS_CONTEXT"
