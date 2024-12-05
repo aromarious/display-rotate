@@ -7,10 +7,18 @@
       "group": "build",
       "problemMatcher": [],
       "label": "npm: start:watch",
-      "detail": "tsc -w",
+      "detail": "npx tsc -w",
       "runOptions": {
         "runOn": "folderOpen"
       }
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "npm: build",
+      "detail": "npx tsc"
     }
   ]
 }
