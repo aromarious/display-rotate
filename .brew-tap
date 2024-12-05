@@ -1,0 +1,4 @@
+formula=display-rotate
+description=Rotate your display easily on macOS CLI using displayplacer.
+homepage=https://github.com/aromarious/display-rotate
+license=ISC

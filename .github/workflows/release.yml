@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      formula: ${{ steps.brew-tap.outputs.formula }}
+      description: ${{ steps.brew-tap.outputs.description }}
+      homepage: ${{ steps.brew-tap.outputs.homepage }}
+      license: ${{ steps.brew-tap.outputs.license }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install git-cliff
+        run: npm install -g git-cliff
+
+      - name: Create CHANGELOG for release
+        run: git-cliff --latest --output latest-release.md
+
+      - name: Create Release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          body_path: ./latest-release.md
+          draft: false
+          prerelease: false
+
+      - name: Get Brew Tap Parameters
+        id: brew-tap
+        run: cat ./.brew-tap >> $GITHUB_OUTPUT
+
+  update-homebrew:
+    needs: [create-release]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Archive URL
+        id: archive
+        run: |
+          echo "archive_url: ${{ github.event.repository.url }}/archive/${{ github.ref }}.tar.gz"
+          echo "archive_url=${{ github.event.repository.url }}/archive/${{ github.ref }}.tar.gz" >> $GITHUB_OUTPUT
+      - name: Calculate SHA256
+        id: sha256
+        run: |
+          curl -L -s "${{ steps.archive.outputs.archive_url }}" -o release.tar.gz
+          echo "sha256=$(sha256sum release.tar.gz | awk '{ print $1 }')" >> $GITHUB_OUTPUT
+      - name: Get Version
+        id: version
+        run: |
+          VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version: $VERSION"
+      - name: Emit repository-dispatch event to Homebrew tap repository
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          repository: aromarious/homebrew-private
+          event-type: update-brew
+          client-payload: >
+            {
+              "formula": "${{ needs.create-release.outputs.formula }}",
+              "description": "${{ needs.create-release.outputs.description }}",
+              "homepage": "${{ needs.create-release.outputs.homepage }}",
+              "url": "${{ steps.archive.outputs.archive_url }}",
+              "sha256": "${{ steps.sha256.outputs.sha256 }}",
+              "version": "${{ steps.version.outputs.version }}",
+              "license": "${{ needs.create-release.outputs.license }}"
+            }
