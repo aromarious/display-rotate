@@ -21,14 +21,14 @@ jobs:
 
     - name: Calculate SHA256
       id: sha256
-      run: echo "::set-output name=sha256::$(sha256sum release.tar.gz | awk '{ print $1 }')"
+      run: echo "sha256=$(sha256sum release.tar.gz | awk '{ print $1 }')" >> $GITHUB_OUTPUT
 
     - name: Clone tap repository
       run: git clone https://github.com/aromarious/homebrew-private.git
 
     - name: Set formula name
       id: formula
-      run: echo "::set-output name=formula::$(echo ${{ github.repository }} | cut -d / -f 2)"
+      run: echo "formula=$(echo ${{ github.repository }} | cut -d / -f 2)" >> $GITHUB_OUTPUT
 
     - name: Update formula
       run: |
