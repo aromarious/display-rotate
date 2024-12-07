@@ -49,6 +49,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: show env
+        run: |
+          echo ${{ env.formula }}
       - name: Set Archive URL
         id: archive
         run: |
