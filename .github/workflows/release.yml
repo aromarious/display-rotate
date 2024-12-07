@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: echo variables
-        run: echo "${{ toJson(github.event.repository.url) }}"
+        run: echo "${{ toJson(github.event.repository.url) }}" "${{ github.event.repository.url }}/archive/${{ github.ref }}.tar.gz"
 
   create-release:
     runs-on: ubuntu-latest
@@ -45,8 +45,8 @@ jobs:
       - name: Set Archive URL
         id: archive
         run: |
-          echo "archive_url: ${{ github.event.head_commit.url }}/archive/${{ github.ref }}.tar.gz"
-          echo "archive_url=${{ github.event.head_commit.url }}/archive/${{ github.ref }}.tar.gz" >> $GITHUB_OUTPUT
+          echo "archive_url: ${{ github.event.repository.url }}/archive/${{ github.ref }}.tar.gz"
+          echo "archive_url=${{ github.event.repository.url }}/archive/${{ github.ref }}.tar.gz" >> $GITHUB_OUTPUT
       - name: Calculate SHA256
         id: sha256
         run: |
