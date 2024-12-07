@@ -41,7 +41,9 @@ jobs:
         run: |
           cat ./.brew-tap
           cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"'
-
+          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+          echo "GITHUB_ENV:"
+          cat $GITHUB_ENV
 
   update-homebrew:
     needs: [create-release]
