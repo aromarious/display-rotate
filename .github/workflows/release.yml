@@ -39,11 +39,10 @@ jobs:
       - name: Get Brew Tap Parameters
         id: brew-tap
         run: |
-          cat ./.brew-tap
-          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"'
           cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
-          echo "GITHUB_ENV:"
-          cat $GITHUB_ENV
+      - name: show env
+        run: |
+          echo ${{ env.formula }}
 
   update-homebrew:
     needs: [create-release]
