@@ -69,8 +69,9 @@ jobs:
           event-type: update-brew
           client-payload: >
             {
-              "formula": "display-rotate",
-              "description": "Rotate your display easily on macOS CLI using displayplacer.",
+              "formula": "${{ steps.brew-tap.outputs.formula }}",
+              "description": "${{ steps.brew-tap.outputs.description }}",
+              "homepage": "${{ steps.brew-tap.outputs.homepage }}",
               "url": "${{ steps.archive.outputs.archive_url }}",
               "sha256": "${{ steps.sha256.outputs.sha256 }}",
               "version": "${{ steps.version.outputs.version }}"
