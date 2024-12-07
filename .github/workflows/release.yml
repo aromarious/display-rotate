@@ -35,7 +35,16 @@ jobs:
   update-homebrew:
     needs: [create-release]
     runs-on: ubuntu-latest
+
     steps:
+      - name: Install jq
+        run: |
+          sudo apt update
+          sudo apt install -y jq
+      - name: Get Brew Tap Parameters
+        id: brew-tap
+        run: |
+          cat .brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
       - name: Set Archive URL
         id: archive
         run: |
