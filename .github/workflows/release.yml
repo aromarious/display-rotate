@@ -55,7 +55,7 @@ jobs:
       - name: Emit repository-dispatch event to Homebrew tap repository
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: aromarious/homebrew-private
           event-type: update-brew
           client-payload: >
