@@ -74,5 +74,6 @@ jobs:
               "homepage": "${{ steps.brew-tap.outputs.homepage }}",
               "url": "${{ steps.archive.outputs.archive_url }}",
               "sha256": "${{ steps.sha256.outputs.sha256 }}",
-              "version": "${{ steps.version.outputs.version }}"
+              "version": "${{ steps.version.outputs.version }}",
+              "license": "${{ steps.brew-tap.outputs.license }}"
             }
