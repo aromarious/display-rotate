@@ -39,10 +39,10 @@ jobs:
       - name: Get Brew Tap Parameters
         id: brew-tap
         run: |
-          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
       - name: show env
         run: |
-          echo ${{ env.formula }}
+          echo ${{ steps.brew-tap.outputs.formula }}
 
   update-homebrew:
     needs: [create-release]
@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: show env
         run: |
-          echo ${{ env.formula }}
+          echo ${{ steps.brew-tap.outputs }}
       - name: Set Archive URL
         id: archive
         run: |
@@ -76,11 +76,11 @@ jobs:
           event-type: update-brew
           client-payload: >
             {
-              "formula": "${{ env.formula }}",
-              "description": "${{ env.description }}",
-              "homepage": "${{ env.homepage }}",
+              "formula": "${{ steps.brew-tap.outputs.formula }}",
+              "description": "${{ steps.brew-tap.outputs.description }}",
+              "homepage": "${{ steps.brew-tap.outputs.homepage }}",
               "url": "${{ steps.archive.outputs.archive_url }}",
               "sha256": "${{ steps.sha256.outputs.sha256 }}",
               "version": "${{ steps.version.outputs.version }}",
-              "license": "${{ env.license }}"
+              "license": "${{ steps.brew-tap.outputs.license }}"
             }
