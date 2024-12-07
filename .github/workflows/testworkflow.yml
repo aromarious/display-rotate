@@ -29,6 +29,7 @@ jobs:
         echo ${{ steps.brew-tap.outputs.formula }}
 
   workflowtest2:
+    needs: [workflowtest1]
     runs-on: ubuntu-latest
 
     steps:
