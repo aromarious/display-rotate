@@ -7,6 +7,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  reveal-variables:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: echo variables
+        run: echo "${{${{ toJson(github.event) }}"
+        
   create-release:
     runs-on: ubuntu-latest
     steps:
