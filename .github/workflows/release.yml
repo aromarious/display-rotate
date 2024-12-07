@@ -44,7 +44,6 @@ jobs:
           cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
           echo "GITHUB_ENV:"
           cat $GITHUB_ENV
-          echo "formula: ${{ github.env.formula }}"
 
   update-homebrew:
     needs: [create-release]
@@ -75,11 +74,11 @@ jobs:
           event-type: update-brew
           client-payload: >
             {
-              "formula": "${{ github.env.formula }}",
-              "description": "${{ github.env.description }}",
-              "homepage": "${{ github.env.homepage }}",
+              "formula": "${{ env.formula }}",
+              "description": "${{ env.description }}",
+              "homepage": "${{ env.homepage }}",
               "url": "${{ steps.archive.outputs.archive_url }}",
               "sha256": "${{ steps.sha256.outputs.sha256 }}",
               "version": "${{ steps.version.outputs.version }}",
-              "license": "${{ github.env.license }}"
+              "license": "${{ env.license }}"
             }
