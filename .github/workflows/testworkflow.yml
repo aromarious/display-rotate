@@ -24,7 +24,4 @@ jobs:
     steps:
       - name: Show vars
         run: |
-          echo ${{ needs.workflowtest1.outputs.formula }}
-          echo ${{ needs.workflowtest1.outputs.description }}
-          echo ${{ needs.workflowtest1.outputs.homepage }}
-          echo ${{ needs.workflowtest1.outputs.license }}
+          echo ${{ steps.brew-tap.outputs }}
