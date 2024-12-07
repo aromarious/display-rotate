@@ -1,0 +1,40 @@
+name: WorkflowTest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  workflowtest1:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install jq
+      run: |
+        sudo apt update
+        sudo apt install -y jq
+
+    - name: Get Brew Tap Parameters
+      id: brew-tap
+      run: |
+        cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
+    - name: show env
+      run: |
+        echo ${{ steps.brew-tap.outputs.formula }}
+
+  workflowtest2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show vars
+        run: |
+          echo ${{ steps.brew-tap.outputs.formula }}
+          echo ${{ steps.brew-tap.outputs.description }}
+          echo ${{ steps.brew-tap.outputs.homepage }}
+          echo ${{ steps.brew-tap.outputs.license }}
