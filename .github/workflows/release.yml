@@ -40,11 +40,7 @@ jobs:
         id: brew-tap
         run: |
           cat ./.brew-tap
-          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
-          echo "formula: ${{ github.env.formula }}"
-          echo "description: ${{ github.env.description }}"
-          echo "homepage: ${{ github.env.homepage }}"
-          echo "license: ${{ github.env.license }}"
+          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"'
 
 
   update-homebrew:
