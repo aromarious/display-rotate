@@ -44,7 +44,7 @@ jobs:
       - name: Get Brew Tap Parameters
         id: brew-tap
         run: |
-          cat ${{ github.event.repository }}/.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
+          cat display-rotate/.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
       - name: Set Archive URL
         id: archive
         run: |
