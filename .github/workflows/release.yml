@@ -9,10 +9,10 @@ on:
 jobs:
   reveal-variables:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: echo variables
-        run: echo "${{${{ toJson(github.event) }}"
-        
+        run: echo "${{ toJson(github.event) }}"
+
   create-release:
     runs-on: ubuntu-latest
     steps:
