@@ -11,9 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: ls
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install jq
         run: |
-          pwd; ls -al .brew-tap; cat ./.brew-tap
+          sudo apt update
+          sudo apt install -y jq
+      - name: Get Brew Tap Parameters
+        id: brew-tap
+        run: |
+          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
 
   create-release:
     runs-on: ubuntu-latest
