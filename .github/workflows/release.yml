@@ -7,12 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  reveal-variables:
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo variables
-        run: echo "${{ toJson(github.event.repository.url) }}" "${{ github.event.repository.url }}/archive/${{ github.ref }}.tar.gz"
-
   create-release:
     runs-on: ubuntu-latest
     steps:
@@ -50,9 +44,8 @@ jobs:
       - name: Calculate SHA256
         id: sha256
         run: |
-          curl -L -s "${{ github.env.archive_url }}" -o release.tar.gz
+          curl -L -s "${{ steps.archive.outputs.archive_url }}" -o release.tar.gz
           echo "sha256=$(sha256sum release.tar.gz | awk '{ print $1 }')" >> $GITHUB_OUTPUT
-          echo "sha256: $(sha256sum release.tar.gz | awk '{ print $1 }')"
       - name: Get Version
         id: version
         run: |
