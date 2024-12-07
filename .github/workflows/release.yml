@@ -49,11 +49,6 @@ jobs:
           draft: false
           prerelease: false
 
-  update-homebrew:
-    needs: [create-release]
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Install jq
         run: |
           sudo apt update
@@ -61,7 +56,14 @@ jobs:
       - name: Get Brew Tap Parameters
         id: brew-tap
         run: |
-          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
+          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+
+
+  update-homebrew:
+    needs: [create-release]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Set Archive URL
         id: archive
         run: |
@@ -86,11 +88,11 @@ jobs:
           event-type: update-brew
           client-payload: >
             {
-              "formula": "${{ steps.brew-tap.outputs.formula }}",
-              "description": "${{ steps.brew-tap.outputs.description }}",
-              "homepage": "${{ steps.brew-tap.outputs.homepage }}",
+              "formula": "${{ github.env.formula }}",
+              "description": "${{ github.env.description }}",
+              "homepage": "${{ github.env.homepage }}",
               "url": "${{ steps.archive.outputs.archive_url }}",
               "sha256": "${{ steps.sha256.outputs.sha256 }}",
               "version": "${{ steps.version.outputs.version }}",
-              "license": "${{ steps.brew-tap.outputs.license }}"
+              "license": "${{ github.env.license }}"
             }
