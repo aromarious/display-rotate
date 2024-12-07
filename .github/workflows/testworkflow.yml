@@ -18,8 +18,6 @@ jobs:
       id: brew-tap
       run: |
         cat ./.brew-tap >> $GITHUB_OUTPUT
-      env:
-        GITHUB_OUTPUT: $GITHUB_OUTPUT
 
   workflowtest2:
     needs: [workflowtest1]
@@ -28,4 +26,7 @@ jobs:
     steps:
       - name: Show vars
         run: |
-          echo "${{ needs.workflowtest1.outputs }}"
+          echo "${{ needs.workflowtest1.outputs.formula }}"
+          echo "${{ needs.workflowtest1.outputs.description }}"
+          echo "${{ needs.workflowtest1.outputs.homepage }}"
+          echo "${{ needs.workflowtest1.outputs.license }}"
