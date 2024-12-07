@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: echo variables
-        run: echo "${{ toJson(github.event) }}"
+        run: echo "${{ toJson(github.event.repository.url) }}"
 
   create-release:
     runs-on: ubuntu-latest
