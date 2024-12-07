@@ -9,6 +9,13 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+
+    outputs:
+      formula: ${{ steps.brew-tap.outputs.formula }}
+      description: ${{ steps.brew-tap.outputs.description }}
+      homepage: ${{ steps.brew-tap.outputs.homepage }}
+      license: ${{ steps.brew-tap.outputs.license }}
+
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node.js
@@ -32,26 +39,15 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Install jq
-        run: |
-          sudo apt update
-          sudo apt install -y jq
       - name: Get Brew Tap Parameters
         id: brew-tap
-        run: |
-          cat ./.brew-tap | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
-      - name: show env
-        run: |
-          echo ${{ steps.brew-tap.outputs.formula }}
+        run: cat ./.brew-tap >> $GITHUB_OUTPUT
 
   update-homebrew:
     needs: [create-release]
     runs-on: ubuntu-latest
 
     steps:
-      - name: show env
-        run: |
-          echo ${{ steps.brew-tap.outputs }}
       - name: Set Archive URL
         id: archive
         run: |
@@ -76,11 +72,11 @@ jobs:
           event-type: update-brew
           client-payload: >
             {
-              "formula": "${{ steps.brew-tap.outputs.formula }}",
-              "description": "${{ steps.brew-tap.outputs.description }}",
-              "homepage": "${{ steps.brew-tap.outputs.homepage }}",
+              "formula": "${{ needs.create-release.outputs.formula }}",
+              "description": "${{ needs.create-release.outputs.description }}",
+              "homepage": "${{ needs.create-release.outputs.homepage }}",
               "url": "${{ steps.archive.outputs.archive_url }}",
               "sha256": "${{ steps.sha256.outputs.sha256 }}",
               "version": "${{ steps.version.outputs.version }}",
-              "license": "${{ steps.brew-tap.outputs.license }}"
+              "license": "${{ needs.create-release.outputs.license }}"
             }
