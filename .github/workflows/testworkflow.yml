@@ -6,7 +6,11 @@ on:
 jobs:
   workflowtest1:
     runs-on: ubuntu-latest
-
+    outputs:
+      formula: ${{ steps.brew-tap.outputs.formula }}
+      description: ${{ steps.brew-tap.outputs.description }}
+      homepage: ${{ steps.brew-tap.outputs.homepage }}
+      license: ${{ steps.brew-tap.outputs.license }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -24,4 +28,4 @@ jobs:
     steps:
       - name: Show vars
         run: |
-          echo ${{ steps.brew-tap.outputs }}
+          echo "${{ needs.workflowtest1.outputs }}"
