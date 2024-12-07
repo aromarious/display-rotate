@@ -7,6 +7,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  show-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ls
+        run: |
+          pwd; ls -lR
   create-release:
     runs-on: ubuntu-latest
     steps:
