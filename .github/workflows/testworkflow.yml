@@ -10,13 +10,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    - name: Install yq
-      run: |
-        sudo snap install yq
     - name: Get Brew Tap Parameters
       id: brew-tap
       run: |
