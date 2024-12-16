@@ -66,8 +66,13 @@ const interpolate = ({
 const main = (): void => {
   try {
     const args: string[] = process.argv.slice(2) // Remove node and script path
-    const id: string =
+    const argId: string =
       args.length > 0 ? args[0] : process.env.DISPLAY_ROTATE_ID || ""
+    // Prefix interpretation for display ID:
+    // '+' or no prefix: rotate 90 degrees clockwise
+    // '-' prefix: rotate 90 degrees counter-clockwise
+    const [_, sign, id] = argId.match(/([+-])?([\-\d[A-Z]+)$/) || []
+    const rotationDirection: number = sign === "-" ? -90 : 90
     if (!id) {
       errorExit(errors.default)
     }
@@ -86,7 +91,8 @@ const main = (): void => {
     const output: string = input
       .replace(
         new RegExp(`(id:${id}.*?degree:)(\\d+)`),
-        (_, prefix, degree) => `${prefix}${(parseInt(degree, 10) + 90) % 360}`
+        (_, prefix, degree) =>
+          `${prefix}${(parseInt(degree, 10) + rotationDirection) % 360}`
       )
       .replace(
         /res:(\d+)x(\d+)/,

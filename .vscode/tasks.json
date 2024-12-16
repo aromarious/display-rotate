@@ -5,9 +5,14 @@
       "type": "npm",
       "script": "start:watch",
       "group": "build",
-      "problemMatcher": [],
       "label": "npm: start:watch",
       "detail": "npx tsc -w",
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch",
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated"
+      },
       "runOptions": {
         "runOn": "folderOpen"
       }
